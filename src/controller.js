@@ -1,5 +1,6 @@
-import * as yup from 'yup';
 import initWatcher from './watcher.js';
+import i18next from 'i18next';
+import buildSchema from './validationSchema.js';
 
 const initApp = (elements, state) => {    
     const watchedState = initWatcher(state, elements);
@@ -9,7 +10,7 @@ const initApp = (elements, state) => {
 
         const url = elements.input.value.trim();
 
-        const schema = yup.string().url().notOneOf(state.feeds);
+        const schema = buildSchema(state.feeds);
 
         schema.validate(url)
             .then((validatedUrl) => {
@@ -19,7 +20,7 @@ const initApp = (elements, state) => {
             })            
             .catch((err) => {
                 watchedState.form.validation = false;
-                watchedState.form.errorMessage = err.message;
+                watchedState.form.errorMessage = i18next.t(`errors.${err.type}`);
             });
     });
 };
