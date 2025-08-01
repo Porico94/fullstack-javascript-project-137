@@ -6,7 +6,11 @@ export default {
                 invalidUrl: 'La URL no es válida',
                 notOneOf: 'Este RSS ya existe',
                 required: 'Este campo es obligatorio',
+                unknown: 'Ha ocurrido un error desconocido',
             },
+        feeds: 'Fuentes',
+        posts: 'Publicaciones',
+        view: 'Ver',
         },
     },
 };
