@@ -3,13 +3,14 @@ import i18next from 'i18next';
 import buildSchema from './validationSchema.js';
 import loadRss from './api.js';
 import parseRss from './parser.js';
+import { updateFeed } from './updateFeeds.js';
 import { renderForm, renderFeed, renderPosts } from './view.js';
 
 const initApp = (elements, state) => {    
     const watchedState = initWatcher(state, elements);
     renderForm(elements, watchedState);
     renderFeed(elements, watchedState.feeds);
-    renderPosts(elements, watchedState.posts);
+    renderPosts(elements, watchedState.posts);    
 
     elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -23,10 +24,11 @@ const initApp = (elements, state) => {
 
             return loadRss(validatedUrl)
                 .then((contents) => {
-                    const { feed, posts } = parseRss(contents);
+                    const { feed, posts } = parseRss(contents, url);
                         
                         watchedState.feeds.push(feed);
-                        watchedState.posts.push(...posts);
+                        watchedState.posts = [...watchedState.posts, ...posts];
+                        updateFeed(feed, watchedState);
 
                         watchedState.form.validation = true;
                         watchedState.form.errorMessage = null;

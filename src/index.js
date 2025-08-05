@@ -1,7 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import initApp from './controller.js';  
 import initI18n from './locales/index.js'
-import loadRss from './api.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initI18n();
@@ -23,8 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         feeds: [],
         posts: [],
     };
-
-    initApp(elements, state);
-    loadRss('https://lorem-rss.hexlet.app/feed?length=5')
-        .then((contents) => console.log(contents));   
+    
+    initApp(elements, state);    
 });
