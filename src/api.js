@@ -6,7 +6,7 @@ const loadRss = (rssUrl) => {
 
     return axios.get(proxyUrl)
       .then((response) => response.data.contents)
-      .catch((error) => {
+      .catch(() => {
         throw new Error('network');
       });
 };

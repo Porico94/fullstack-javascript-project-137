@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import initApp from './controller.js';  
-import initI18n from './locales/index.js'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import initApp from './controller.js';
+import initI18n from './locales/index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initI18n();
@@ -11,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
         feedback: document.querySelector('.feedback'),
         feeds: document.querySelector('.feeds'),
         posts: document.querySelector('.posts'),
+        modal: document.getElementById('modal'),
+        modalTitle: document.getElementById('modalTitle'),
+        modalBody: document.getElementById('modalBody'),
+        modalFullArticle: document.getElementById('modalFullArticle'),
     };
 
     const state = {

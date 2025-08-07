@@ -36,6 +36,7 @@ const parseRss = (contents, url) => {
             title: postTitle,
             link: postLink,
             description: postDescription,
+            isRead: false,
         };
     }).filter(Boolean);
 

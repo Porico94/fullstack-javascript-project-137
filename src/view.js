@@ -59,7 +59,7 @@ const renderPosts = (elements, posts) => {
     const ul = document.createElement('ul');
     ul.classList.add('list-group');
 
-    posts.forEach(({ title, link }) => {
+    posts.forEach(({ id, title, link, isRead}) => {
         const li = document.createElement('li');
         li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
 
@@ -68,8 +68,19 @@ const renderPosts = (elements, posts) => {
         a.setAttribute('target', '_blank');
         a.setAttribute('rel', 'noopener noreferrer');
         a.textContent = title;
+        a.classList.add(isRead ? 'fw-normal' : 'fw-bold');
 
-        li.appendChild(a);
+        const previewButton = document.createElement('button');
+        previewButton.type = 'button';
+        previewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ms-2', 'preview-btn');
+        previewButton.dataset.id = id;
+        previewButton.textContent = i18next.t('view');
+
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('d-flex', 'align-items-center');
+        wrapper.append(a, previewButton);
+
+        li.appendChild(wrapper);
         ul.appendChild(li);
     });
 

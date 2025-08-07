@@ -5,12 +5,28 @@ import loadRss from './api.js';
 import parseRss from './parser.js';
 import { updateFeed } from './updateFeeds.js';
 import { renderForm, renderFeed, renderPosts } from './view.js';
+import showModal from './modal.js';
 
 const initApp = (elements, state) => {    
     const watchedState = initWatcher(state, elements);
     renderForm(elements, watchedState);
     renderFeed(elements, watchedState.feeds);
-    renderPosts(elements, watchedState.posts);    
+    renderPosts(elements, watchedState.posts);
+
+    elements.posts.addEventListener('click', (e) => {
+        const previewButton = e.target.closest('.preview-btn');
+        if (!previewButton) return;
+
+        const postId = previewButton.dataset.id;
+
+        const post = watchedState.posts.find((p) => p.id === postId);
+        if (post) {
+            post.isRead = true;
+        }
+
+        renderPosts(elements, state.posts);
+        showModal(postId, state, elements);
+    })
 
     elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
