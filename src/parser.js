@@ -14,7 +14,7 @@ const parseRss = (contents, url) => {
     const title = doc.querySelector('channel >  title')?.textContent;
     const description = doc.querySelector('channel > description')?.textContent;
     
-    const feed = { 
+    const feed = {
         id: _.uniqueId('feed_'),
         title,
         description,
@@ -24,9 +24,9 @@ const parseRss = (contents, url) => {
     const items = doc.querySelectorAll('channel > item');
 
     const posts = Array.from(items).map((item) => {
-        const postTitle = item.querySelector('title')?.textContent;
-        const postLink = item.querySelector('link')?.textContent;
+        const postTitle = item.querySelector('title')?.textContent;        
         const postDescription = item.querySelector('description')?.textContent;
+        const postLink = item.querySelector('link')?.textContent;
 
         if (!postTitle || !postLink) return null;
 

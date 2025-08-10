@@ -2,8 +2,7 @@ import loadRss from './api.js';
 import extractPosts from './extractPosts';
 
 const updateFeed = (feed, watchedState) => {
-    console.log(`Verificando feed: ${feed.title || feed.url} a las ${new Date().toLocaleTimeString()}`);
-  
+      
     const url = feed.url;
 
     loadRss(url)
@@ -14,10 +13,7 @@ const updateFeed = (feed, watchedState) => {
             const uniquePosts = newPosts.filter((post) => !existingLinks.includes(post.link));
 
             if (uniquePosts.length > 0) {
-                console.log(`Se encontraron ${uniquePosts.length} nuevos posts`);
                 watchedState.posts = [...watchedState.posts, ...uniquePosts];
-            } else {
-                console.log('Sin nuevos posts');
             }
         })
         .catch((err) => {
