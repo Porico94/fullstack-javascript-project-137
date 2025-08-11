@@ -1,14 +1,14 @@
 export default {
     es: {
         translation: {
-            success: 'RSS agregado exitosamete',
+            success: 'RSS cargado con éxito',
             feeds: 'Fuentes',
             posts: 'Publicaciones',
-            view: 'Ver',
+            preview: 'Vista previa',
             errors: {
-                invalidUrl: 'La URL no es válida',
-                notOneOf: 'Este RSS ya existe',
-                required: 'Este campo es obligatorio',
+                invalidUrl: 'El enlace debe ser una URL válida',
+                notOneOf: 'El RSS ya existe',
+                required: 'No debe estar vacío',
                 unknown: 'Ha ocurrido un error desconocido',
             },        
         },

@@ -74,7 +74,7 @@ const renderPosts = (elements, posts) => {
         previewButton.type = 'button';
         previewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ms-2', 'preview-btn');
         previewButton.dataset.id = id;
-        previewButton.textContent = i18next.t('view');
+        previewButton.textContent = i18next.t('preview');
 
         const wrapper = document.createElement('div');
         wrapper.classList.add('d-flex', 'align-items-center');

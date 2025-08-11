@@ -7,7 +7,7 @@
     "start": "webpack serve --config webpack/webpack.dev.js",
     "build": "webpack --config webpack/webpack.prod.js",
     "lint": "eslint src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:e2e": "playwright test"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@eslint/js": "^9.31.0",
+    "@playwright/test": "^1.54.2",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
     "eslint": "^9.31.0",

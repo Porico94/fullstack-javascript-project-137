@@ -13,10 +13,10 @@
         <div class="input-group">
             <input name="url" required type="url" class="form-control" placeholder="Ingresa URL RSS"
                 aria-label="RSS URL" />
-            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="submit" class="btn btn-primary" data-testid="add">Agregar</button>
         </div>
         <div class="example-message">An example: https://hexlet.io/lessons.rss</div>
-        <div class="feedback text-danger mt-2"></div>
+        <div class="feedback text-danger mt-2" data-testid="feedback"></div>
     </form>
     <div class="feeds"></div>
     <div class="posts"></div>
