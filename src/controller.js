@@ -32,7 +32,7 @@ const initApp = (elements, state) => {
         e.preventDefault();
 
         const url = elements.input.value.trim();
-        const schema = buildSchema(state.feeds);
+        const schema = buildSchema(state.feeds.map((f) => f.url));
 
         schema.validate(url)
             .then((validatedUrl) => {
@@ -40,7 +40,7 @@ const initApp = (elements, state) => {
 
             return loadRss(validatedUrl)
                 .then((contents) => {
-                    const { feed, posts } = parseRss(contents, url);
+                    const { feed, posts } = parseRss(contents, validatedUrl);
                         
                         watchedState.feeds.push(feed);
                         watchedState.posts = [...watchedState.posts, ...posts];
@@ -51,10 +51,10 @@ const initApp = (elements, state) => {
                         watchedState.form.processState = 'success';
                         watchedState.form.input = '';
                     });                
-                })   
+                })
                 .catch((err) => {
                     watchedState.form.validation = false;
-                    watchedState.form.errorMessage = i18next.t(err.message || 'errors.unknown');
+                    watchedState.form.errorMessage = err.message || 'errors.unknown';
                     watchedState.form.processState = 'failed';
                 });
     });

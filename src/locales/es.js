@@ -10,7 +10,7 @@ export default {
                 notOneOf: 'El RSS ya existe',
                 required: 'No debe estar vacío',
                 unknown: 'Ha ocurrido un error desconocido',
-            },        
+            },
         },
     },
 };

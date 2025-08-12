@@ -73,6 +73,7 @@ const renderPosts = (elements, posts) => {
         const previewButton = document.createElement('button');
         previewButton.type = 'button';
         previewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ms-2', 'preview-btn');
+        previewButton.setAttribute('role', 'button')
         previewButton.dataset.id = id;
         previewButton.textContent = i18next.t('preview');
 
