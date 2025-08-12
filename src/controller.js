@@ -1,5 +1,4 @@
 import initWatcher from './watcher.js';
-import i18next from 'i18next';
 import buildSchema from './validationSchema.js';
 import loadRss from './api.js';
 import parseRss from './parser.js';
