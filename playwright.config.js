@@ -5,7 +5,7 @@ export default defineConfig({
     webServer: {
         command: 'npm start',
         port: 8080,
-        timeout: 60 * 1000, // 1 min para esperar que levante
+        timeout: 180 * 1000, // 1 min para esperar que levante
         reuseExistingServer: !process.env.CI, // en local, si ya está abierto no lo levanta
     },
     use: {
