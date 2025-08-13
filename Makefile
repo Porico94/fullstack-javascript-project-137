@@ -1,20 +1,20 @@
 install:
-        npm install
+    npm install
 
 start:
-        npx webpack serve
+    npx webpack serve
 
 build:
-        npm run build
+    npm run build
 
 test:
-        npm test -s
+    npm test -s
 
 test-coverage:
-        npm test -- --coverage
+    npm test -- --coverage
 
 lint:
-        npx eslint .
+    npx eslint .
 
 lint-fix:
-        npx eslint . --fix
+    npx eslint . --fix
