@@ -5,11 +5,11 @@ export default defineConfig({
     webServer: {
         command: 'npm start',
         port: 8080,
-        timeout: 180 * 1000, // 1 min para esperar que levante
+        timeout: 180 * 1000,
         reuseExistingServer: !process.env.CI, // en local, si ya está abierto no lo levanta
     },
     use: {
         headless: true,
-        baseURL: 'http://localhost:8080', // para usar page.goto('/') directo
+        baseURL: 'http://localhost:8080',
     },
 });
