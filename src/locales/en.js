@@ -11,7 +11,7 @@ export default {
             readMore: 'Read more',
             close: 'Close',
         },
-        success: 'RSS loaded successfully',
+        success: 'RSS has been loaded',
         feeds: 'Feeds',
         posts: 'Posts',
         preview: 'Preview',
