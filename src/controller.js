@@ -8,10 +8,16 @@ import showModal from './modal.js';
 
 const initApp = (elements, state) => {    
     const watchedState = initWatcher(state, elements);
-    renderForm(elements, watchedState);
-    renderFeed(elements, watchedState.feeds);
-    renderPosts(elements, watchedState.posts);
 
+    const rerender = () => {
+        renderForm(elements, watchedState);
+        renderFeed(elements, watchedState.feeds);
+        renderPosts(elements, watchedState.posts);
+    };
+
+    // Render inicial
+    rerender();
+    
     elements.posts.addEventListener('click', (e) => {
         const previewButton = e.target.closest('.preview-btn');
         if (!previewButton) return;
@@ -23,7 +29,7 @@ const initApp = (elements, state) => {
             post.isRead = true;
         }
 
-        renderPosts(elements, state.posts);
+        renderPosts(elements, watchedState.posts);
         showModal(postId, state, elements);
     })
 
@@ -57,6 +63,9 @@ const initApp = (elements, state) => {
                     watchedState.form.processState = 'failed';
                 });
     });
+
+    // Devuelve un API mínimo para re-render en cambios de idioma
+    return { rerender };
 };
 
 export default initApp;

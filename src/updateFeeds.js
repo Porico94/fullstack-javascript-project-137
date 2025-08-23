@@ -1,5 +1,5 @@
 import loadRss from './api.js';
-import extractPosts from './extractPosts';
+import extractPosts from './extractPosts.js';
 
 const updateFeed = (feed, watchedState) => {
       

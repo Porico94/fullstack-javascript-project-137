@@ -1,12 +1,16 @@
 import i18next from 'i18next';
-import resources from './es.js';
+import es from './es.js';
+import en from './en.js';
+
+const resources = { en, es };
 
 const initI18n = () => {
-    i18next.init({
-        lng: 'es',
-        debug: false,
-        resources,
-    });
+  i18next.init({
+    lng: 'en',
+    fallbackLng: 'en',
+    debug: false,
+    resources,
+  });
 };
 
 export default initI18n;
