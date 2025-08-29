@@ -1,97 +1,143 @@
-import i18next from 'i18next';
+// src/view.js
 
-const renderForm = (elements, state) => {
-    const { input, feedback } = elements;
+const renderFeeds = (feeds, elements) => {
+  elements.feeds.innerHTML = '';
 
-    if (state.form.validation === null) {
-        input.classList.remove('border-danger', 'border-success');
-        feedback.textContent = '';
-        feedback.classList.remove('text-success', 'text-danger');
-        return;
+  const feedsContainer = document.createElement('div');
+  feedsContainer.classList.add('card', 'border-0');
+
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+
+  const title = document.createElement('h2');
+  title.classList.add('card-title', 'h4');
+  title.textContent = 'Feeds';
+
+  cardBody.appendChild(title);
+  feedsContainer.appendChild(cardBody);
+
+  const list = document.createElement('ul');
+  list.classList.add('list-group', 'border-0', 'rounded-0');
+
+  feeds.forEach((feed) => {
+    const item = document.createElement('li');
+    item.classList.add('list-group-item', 'border-0', 'border-end-0');
+
+    const feedTitle = document.createElement('h3');
+    feedTitle.classList.add('h6', 'm-0');
+    feedTitle.textContent = feed.title;
+
+    const feedDesc = document.createElement('p');
+    feedDesc.classList.add('m-0', 'small', 'text-black-50');
+    feedDesc.textContent = feed.description;
+
+    item.append(feedTitle, feedDesc);
+    list.appendChild(item);
+  });
+
+  feedsContainer.appendChild(list);
+  elements.feeds.appendChild(feedsContainer);
+};
+
+const renderPosts = (posts, elements, state) => {
+  elements.posts.innerHTML = '';
+
+  const postsContainer = document.createElement('div');
+  postsContainer.classList.add('card', 'border-0');
+
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+
+  const title = document.createElement('h2');
+  title.classList.add('card-title', 'h4');
+  title.textContent = 'Posts';
+
+  cardBody.appendChild(title);
+  postsContainer.appendChild(cardBody);
+
+  const list = document.createElement('ul');
+  list.classList.add('list-group', 'border-0', 'rounded-0');
+
+  posts.forEach((post) => {
+    const item = document.createElement('li');
+    item.classList.add(
+      'list-group-item',
+      'd-flex',
+      'justify-content-between',
+      'align-items-start',
+      'border-0',
+      'border-end-0',
+    );
+
+    const link = document.createElement('a');
+    link.setAttribute('href', post.link);
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+    link.dataset.id = post.id;
+    link.textContent = post.title;
+
+    if (state.uiState?.visitedPosts?.has(post.id)) {
+      link.classList.add('fw-normal', 'link-secondary');
+    } else {
+      link.classList.add('fw-bold');
     }
 
-    if (state.form.validation) {
-        input.classList.remove('border-danger');
-        input.classList.add('border-success');
-        feedback.classList.add('text-success');
-        feedback.classList.remove('text-danger');
-        feedback.textContent = i18next.t('loading.success');
-        input.focus();
-    } else {
-        input.classList.remove('border-success');
-        input.classList.add('border-danger');
-        feedback.classList.add('text-danger');
-        feedback.classList.remove('text-success');
-        feedback.textContent = i18next.t(errors.errorMessage);
+    const button = document.createElement('button');
+    button.setAttribute('type', 'button');
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    button.dataset.id = post.id;
+    button.dataset.bsToggle = 'modal';
+    button.dataset.bsTarget = '#modal';
+    button.textContent = 'Preview';
+
+    item.append(link, button);
+    list.appendChild(item);
+  });
+
+  postsContainer.appendChild(list);
+  elements.posts.appendChild(postsContainer);
+};
+
+const renderForm = (form, elements) => {
+  const { input, feedback } = elements;
+
+  if (!input || !feedback) {
+    console.error('❌ Faltan elementos del formulario en el DOM');
+    return;
+  }
+
+  if (form.status === 'success') {
+    input.classList.remove('is-invalid');
+    feedback.classList.remove('text-danger');
+    feedback.classList.add('text-success');
+    feedback.textContent = 'RSS loaded successfully';
+  }
+
+  if (form.status === 'failed') {
+    input.classList.add('is-invalid');
+    feedback.classList.remove('text-success');
+    feedback.classList.add('text-danger');
+    feedback.textContent = form.error || 'Something went wrong';
   }
 };
 
-const renderFeed = (elements, feed) => {
-    const container = elements.feeds;
-    container.innerHTML = '';
+export default (path, value, state, elements) => {
+  switch (path) {
+    case 'feeds':
+      renderFeeds(state.feeds, elements);
+      break;
 
-    const title = document.createElement('h2');
-    title.textContent = i18next.t('feeds');
-    container.appendChild(title);
+    case 'posts':
+      renderPosts(state.posts, elements, state);
+      break;
 
-    const ul = document.createElement('ul');
-    ul.classList.add('list-group', 'mb-3');
+    case 'form':
+    case 'form.status':
+    case 'form.error':
+      renderForm(state.form, elements);
+      break;
 
-    feed.forEach(({ title, description }) => {
-        const li = document.createElement('li');
-        li.classList.add('list-group-item');
-
-        const feedTitle = document.createElement('h3');
-        feedTitle.textContent = title;
-
-        const feedDesc = document.createElement('p');
-        feedDesc.textContent = description;
-
-        li.append(feedTitle, feedDesc);
-        ul.appendChild(li);
-    });
-
-    container.appendChild(ul);
+    default:
+      break;
+  }
 };
-
-const renderPosts = (elements, posts) => {
-    const container = elements.posts;
-    container.innerHTML = '';
-
-    const title = document.createElement('h2');
-    title.textContent = i18next.t('posts');
-    container.appendChild(title);
-
-    const ul = document.createElement('ul');
-    ul.classList.add('list-group');
-
-    posts.forEach(({ id, title, link, isRead}) => {
-        const li = document.createElement('li');
-        li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
-
-        const a = document.createElement('a');
-        a.setAttribute('href', link);
-        a.setAttribute('target', '_blank');
-        a.setAttribute('rel', 'noopener noreferrer');
-        a.textContent = title;
-        a.classList.add(isRead ? 'fw-normal' : 'fw-bold');
-
-        const previewButton = document.createElement('button');
-        previewButton.type = 'button';
-        previewButton.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ms-2', 'preview-btn');
-        previewButton.setAttribute('role', 'button')
-        previewButton.dataset.id = id;
-        previewButton.textContent = i18next.t('preview');
-
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('d-flex', 'align-items-center');
-        wrapper.append(a, previewButton);
-
-        li.appendChild(wrapper);
-        ul.appendChild(li);
-    });
-
-    container.appendChild(ul);
-};
-
-export { renderForm, renderFeed, renderPosts };

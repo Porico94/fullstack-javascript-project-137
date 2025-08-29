@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const elements = {
         form: document.querySelector('.rss-form'),
-        input: document.querySelector('input[name="url"]'),
+        input: document.querySelector('#url-input'),
         feedback: document.querySelector('.feedback'),
         feeds: document.querySelector('.feeds'),
         posts: document.querySelector('.posts'),

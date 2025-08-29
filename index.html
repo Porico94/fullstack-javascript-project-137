@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" href="data:,">
   <title>Frontend Project</title>
 </head>
 
@@ -12,14 +13,15 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"></h5>
-          <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title" id="modal-title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-break"></div>
         <div class="modal-footer">
-          <a class="btn btn-primary full-article" href="#" role="button" target="_blank" rel="noopener noreferrer"
-          data-i18n="modal.readMore"></a>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="modal.close"></button>
+          <a class="btn btn-primary full-article" href="#" role="button" target="_blank" rel="noopener noreferrer">
+            Read more
+          </a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -28,25 +30,23 @@
     <section class="container-fluid bg-dark p-5">
       <div class="row">
         <div class="col-md-10 col-lg-8 mx-auto text-white">
-          <h1 class="display-3 mb-0" data-i18n="appTitle"></h1>
-          <p class="lead" data-i18n="appLead"></p>
+          <h1 class="display-3 mb-0">RSS Reader</h1>
+          <p class="lead">Start reading RSS today! It's simple and lovely.</p>
           <form action="" class="rss-form text-body">
             <div class="row">
               <div class="col">
                 <div class="form-floating">
                   <input id="url-input" autofocus type="text" required name="url" aria-label="url"
-                    class="form-control w-100" placeholder="" autocomplete="off"
-                    data-i18n-attr-placeholder="form.label">
-                  <label for="url-input" data-i18n="form.label"></label>
+                    class="form-control w-100" placeholder="RSS link" autocomplete="off">
+                  <label for="url-input">RSS Link</label>
                 </div>
               </div>
               <div class="col-auto">
-                <button type="submit" data-i18n-attr-aria-label="form.submit" 
-                class="h-100 btn btn-lg btn-primary px-sm-5" data-i18n="form.submit"></button>
+                <button type="submit" aria-label="add" class="h-100 btn btn-lg btn-primary px-sm-5">Add</button>
               </div>
             </div>
           </form>
-          <p class="mt-2 mb-0 text-white" data-i18n="form.example"></p>
+          <p class="mt-2 mb-0 text-white">An example: https://hexlet.io/lessons.rss</p>
           <p class="feedback m-0 position-absolute small text-danger"></p>
         </div>
       </div>
