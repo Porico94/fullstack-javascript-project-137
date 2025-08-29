@@ -1,11 +1,13 @@
 import i18next from 'i18next';
 import en from './en.js';
 
-const resources = { en };
+const resources = { 
+  en: en
+};
 
-const initI18n = () => {
-  i18next.init({
-    lng: 'en',
+const initI18n = (language = 'en') => {
+  return i18next.init({
+    lng: language,
     fallbackLng: 'en',
     debug: false,
     resources,

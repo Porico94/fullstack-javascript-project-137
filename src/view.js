@@ -1,3 +1,5 @@
+import i18next from 'i18next';
+
 const renderFeeds = (feeds, elements) => {
   if (!elements.feeds) {
     console.error('❌ Elemento feeds no encontrado en el DOM');
@@ -18,7 +20,7 @@ const renderFeeds = (feeds, elements) => {
 
   const title = document.createElement('h2');
   title.classList.add('card-title', 'h4');
-  title.textContent = 'Feeds';
+  title.textContent = i18next.t('feeds');
 
   cardBody.appendChild(title);
   feedsContainer.appendChild(cardBody);
@@ -66,7 +68,7 @@ const renderPosts = (posts, elements, state) => {
 
   const title = document.createElement('h2');
   title.classList.add('card-title', 'h4');
-  title.textContent = 'Posts';
+  title.textContent = i18next.t('posts');
 
   cardBody.appendChild(title);
   postsContainer.appendChild(cardBody);
@@ -105,7 +107,7 @@ const renderPosts = (posts, elements, state) => {
     button.dataset.id = post.id;
     button.dataset.bsToggle = 'modal';
     button.dataset.bsTarget = '#modal';
-    button.textContent = 'Preview';
+    button.textContent = i18next.t('preview');
 
     item.append(link, button);
     list.appendChild(item);
@@ -125,7 +127,7 @@ const renderForm = (form, elements) => {
 
   // Limpiar clases y contenido previo
   input.classList.remove('is-invalid');
-  feedback.classList.remove('text-danger', 'text-success');
+  feedback.classList.remove('text-danger', 'text-success', 'text-info');
   feedback.textContent = '';
 
   switch (form.status) {
@@ -138,7 +140,7 @@ const renderForm = (form, elements) => {
     case 'success':
       input.removeAttribute('disabled');
       feedback.classList.add('text-success');
-      feedback.textContent = 'RSS loaded successfully';
+      feedback.textContent = i18next.t('loading.success');
       input.focus();
       break;
 
@@ -147,16 +149,9 @@ const renderForm = (form, elements) => {
       input.classList.add('is-invalid');
       feedback.classList.add('text-danger');
       
-      // Mapear errores a mensajes
-      const errorMessages = {
-        required: 'This field is required',
-        notUrl: 'Must be a valid URL',
-        exists: 'RSS already exists',
-        noRss: 'Resource contains no valid RSS',
-        network: 'Network error',
-      };
-      
-      feedback.textContent = errorMessages[form.error] || 'Something went wrong';
+      // Usar i18next para los mensajes de error
+      const errorKey = form.error || 'unknown';
+      feedback.textContent = i18next.t(`errors.${errorKey}`);
       input.focus();
       break;
 

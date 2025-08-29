@@ -1,5 +1,4 @@
 import onChange from 'on-change';
-import * as yup from 'yup';
 import loadRss from './api.js';
 import rssParser from './rss.js';
 import render from './view.js';
@@ -79,7 +78,18 @@ export default () => {
       schema.validateSync(url);
       return { isValid: true, error: null };
     } catch (error) {
-      return { isValid: false, error: error.message };
+      // Mapear los errores de yup a las claves que esperan los tests
+      let errorKey = 'unknown';
+      
+      if (error.type === 'required') {
+        errorKey = 'required';
+      } else if (error.type === 'url') {
+        errorKey = 'notUrl';
+      } else if (error.type === 'notOneOf') {
+        errorKey = 'exists';
+      }
+      
+      return { isValid: false, error: errorKey };
     }
   };
 
@@ -122,6 +132,8 @@ export default () => {
         
         if (err.isParsingError) {
           watchedState.form.error = 'noRss';
+        } else if (err.message === 'network') {
+          watchedState.form.error = 'network';
         } else {
           watchedState.form.error = 'network';
         }
@@ -143,8 +155,7 @@ export default () => {
     const validation = validateUrl(url);
     if (!validation.isValid) {
       watchedState.form.status = 'failed';
-      watchedState.form.error = validation.error.includes('exists') ? 'exists' : 
-                               validation.error.includes('url') ? 'notUrl' : 'required';
+      watchedState.form.error = validation.error;
       return;
     }
 
