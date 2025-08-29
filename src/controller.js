@@ -1,32 +1,38 @@
-import axios from 'axios';
 import onChange from 'on-change';
+import * as yup from 'yup';
+import loadRss from './api.js';
 import rssParser from './rss.js';
 import render from './view.js';
+import buildSchema from './validationSchema.js';
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-// 🔹 función para actualizar feeds periódicamente
 const updateFeeds = (watchedState) => {
+  if (watchedState.feeds.length === 0) {
+    setTimeout(() => updateFeeds(watchedState), 5000);
+    return;
+  }
+
   const requests = watchedState.feeds.map((feed) => {
-    const proxy = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(feed.url)}`;
-    return axios.get(proxy)
-      .then((response) => {
-        const parsed = rssParser(response.data.contents);
+    return loadRss(feed.url)
+      .then((contents) => {
+        const parsed = rssParser(contents);
 
         const newPosts = parsed.items.map((item) => ({
           id: generateId(),
           title: item.title,
           link: item.link,
           description: item.description,
+          feedId: feed.id,
           isRead: false,
         }));
 
-        // agregar solo posts nuevos (comparando por link)
+        // Agregar solo posts nuevos (comparando por link)
         const existingLinks = watchedState.posts.map((p) => p.link);
         const freshPosts = newPosts.filter((post) => !existingLinks.includes(post.link));
 
         if (freshPosts.length > 0) {
-          watchedState.posts.unshift(...freshPosts); // agregamos arriba
+          watchedState.posts.unshift(...freshPosts);
         }
       })
       .catch((err) => {
@@ -35,11 +41,20 @@ const updateFeeds = (watchedState) => {
   });
 
   Promise.all(requests).finally(() => {
-    setTimeout(() => updateFeeds(watchedState), 5000); // vuelve a correr cada 5s
+    setTimeout(() => updateFeeds(watchedState), 5000);
   });
 };
 
 export default () => {
+  const elements = {
+    form: document.querySelector('.rss-form'),
+    input: document.querySelector('#url-input'),
+    feedback: document.querySelector('.feedback'),
+    feeds: document.querySelector('.feeds'),
+    posts: document.querySelector('.posts'),
+    modal: document.getElementById('modal'),
+  };
+
   const state = {
     feeds: [],
     posts: [],
@@ -47,30 +62,41 @@ export default () => {
       status: 'filling', // filling, processing, success, failed
       error: null,
     },
+    uiState: {
+      visitedPosts: new Set(),
+    },
   };
 
   const watchedState = onChange(state, (path, value) => {
-    render(path, value, watchedState);
+    render(path, value, watchedState, elements);
   });
 
-  const form = document.querySelector('form');
-  const input = form.querySelector('input');
-  const postsContainer = document.querySelector('.posts');
+  const validateUrl = (url) => {
+    const existingUrls = watchedState.feeds.map((feed) => feed.url);
+    const schema = buildSchema(existingUrls);
+    
+    try {
+      schema.validateSync(url);
+      return { isValid: true, error: null };
+    } catch (error) {
+      return { isValid: false, error: error.message };
+    }
+  };
 
-  const loadRss = (url) => {
+  const loadAndAddRss = (url) => {
     watchedState.form.status = 'processing';
+    watchedState.form.error = null;
 
-    const proxy = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`;
-
-    axios.get(proxy)
-      .then((response) => {
-        const parsed = rssParser(response.data.contents);
+    loadRss(url)
+      .then((contents) => {
+        const parsed = rssParser(contents);
 
         // Feed
         const feed = {
+          id: generateId(),
           title: parsed.title,
           description: parsed.description,
-          url, // guardamos url para futuras actualizaciones
+          url,
         };
 
         // Posts
@@ -79,60 +105,87 @@ export default () => {
           title: item.title,
           link: item.link,
           description: item.description,
+          feedId: feed.id,
           isRead: false,
         }));
 
         // Actualizar estado
         watchedState.feeds.push(feed);
-        watchedState.posts.push(...posts);
+        watchedState.posts.unshift(...posts);
 
         watchedState.form.status = 'success';
         watchedState.form.error = null;
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Error loading RSS:', err);
         watchedState.form.status = 'failed';
-        watchedState.form.error = 'networkError';
+        
+        if (err.isParsingError) {
+          watchedState.form.error = 'noRss';
+        } else {
+          watchedState.form.error = 'network';
+        }
       });
   };
 
-  // 🔹 evento de submit formulario
-  form.addEventListener('submit', (e) => {
+  // Evento de submit del formulario
+  elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const url = input.value.trim();
-    if (!url) return;
+    const url = elements.input.value.trim();
+    
+    if (!url) {
+      watchedState.form.status = 'failed';
+      watchedState.form.error = 'required';
+      return;
+    }
 
-    loadRss(url);
-    input.value = '';
-    input.focus();
+    // Validar URL
+    const validation = validateUrl(url);
+    if (!validation.isValid) {
+      watchedState.form.status = 'failed';
+      watchedState.form.error = validation.error.includes('exists') ? 'exists' : 
+                               validation.error.includes('url') ? 'notUrl' : 'required';
+      return;
+    }
+
+    loadAndAddRss(url);
+    elements.input.value = '';
   });
 
-  // 🔹 evento para vista previa
-  postsContainer.addEventListener('click', (e) => {
-    const btn = e.target.closest('.preview-btn');
-    if (!btn) return;
+  // Evento para vista previa y marcar como leído
+  elements.posts.addEventListener('click', (e) => {
+    const previewBtn = e.target.closest('[data-bs-toggle="modal"]');
+    const link = e.target.closest('a[data-id]');
+    
+    if (previewBtn) {
+      const { id } = previewBtn.dataset;
+      const post = watchedState.posts.find((p) => p.id === id);
 
-    const { id } = btn.dataset;
-    const post = watchedState.posts.find((p) => p.id === id);
+      if (post) {
+        // Marcar como visitado
+        watchedState.uiState.visitedPosts.add(id);
 
-    if (post) {
-      post.isRead = true; // marcar como leído
+        // Llenar modal
+        const modalTitle = elements.modal.querySelector('.modal-title');
+        const modalBody = elements.modal.querySelector('.modal-body');
+        const modalLink = elements.modal.querySelector('.full-article');
 
-      // llenar modal de Bootstrap
-      const modalTitle = document.querySelector('#modal .modal-title');
-      const modalBody = document.querySelector('#modal .modal-body');
-      const modalLink = document.querySelector('#modal .full-article');
+        modalTitle.textContent = post.title;
+        modalBody.textContent = post.description;
+        modalLink.setAttribute('href', post.link);
 
-      modalTitle.textContent = post.title;
-      modalBody.textContent = post.description;
-      modalLink.setAttribute('href', post.link);
-
-      // abrir modal con Bootstrap
-      const modal = new bootstrap.Modal(document.getElementById('modal'));
-      modal.show();
+        // El modal se abrirá automáticamente por Bootstrap
+      }
+    }
+    
+    if (link) {
+      const { id } = link.dataset;
+      watchedState.uiState.visitedPosts.add(id);
     }
   });
 
-  // 🔹 iniciamos la actualización automática
+  // Iniciar actualización automática
   updateFeeds(watchedState);
+
+  return watchedState;
 };

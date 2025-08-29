@@ -3,42 +3,35 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import i18next from 'i18next';
 import initApp from './controller.js';
 import initI18n from './locales/index.js';
-import applyI18n from './i18nDom.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const userLang = navigator.language?.startsWith('es') ? 'es' : 'en';
-    await initI18n(userLang);
-
-    document.documentElement.setAttribute('lang', i18next.language);
-
-    applyI18n();
-
-    const elements = {
-        form: document.querySelector('.rss-form'),
-        input: document.querySelector('#url-input'),
-        feedback: document.querySelector('.feedback'),
-        feeds: document.querySelector('.feeds'),
-        posts: document.querySelector('.posts'),
-        modal: document.getElementById('modal'),
-        modalTitle: document.querySelector('.modal-title'),
-        modalBody: document.querySelector('.modal-body'),
-        modalFullArticle: document.querySelector('.full-article'),
-    };
-
-    const state = {
-        form: {
-            input: '',
-            errorMessage: '',
-            validation: null,
-        },
-        feeds: [],
-        posts: [],
-    };
-    
-    const api = initApp(elements, state);
-    i18next.on('languageChanged', () => {
-        document.documentElement.setAttribute('lang', i18next.language);
-        applyI18n();
-        api.rerender();
-    });
+    try {
+        // Inicializar i18n
+        await initI18n();
+        
+        // Verificar que los elementos necesarios existan en el DOM
+        const requiredElements = [
+            '.rss-form',
+            '#url-input',
+            '.feedback',
+            '.feeds',
+            '.posts',
+            '#modal'
+        ];
+        
+        const missingElements = requiredElements.filter(selector => !document.querySelector(selector));
+        
+        if (missingElements.length > 0) {
+            console.error('❌ Faltan elementos en el DOM:', missingElements);
+            return;
+        }
+        
+        // Inicializar la aplicación
+        const app = initApp();
+        
+        console.log('✅ Aplicación RSS Reader inicializada correctamente');
+        
+    } catch (error) {
+        console.error('❌ Error al inicializar la aplicación:', error);
+    }
 });

@@ -1,7 +1,14 @@
-// src/view.js
-
 const renderFeeds = (feeds, elements) => {
+  if (!elements.feeds) {
+    console.error('❌ Elemento feeds no encontrado en el DOM');
+    return;
+  }
+
   elements.feeds.innerHTML = '';
+
+  if (feeds.length === 0) {
+    return;
+  }
 
   const feedsContainer = document.createElement('div');
   feedsContainer.classList.add('card', 'border-0');
@@ -40,7 +47,16 @@ const renderFeeds = (feeds, elements) => {
 };
 
 const renderPosts = (posts, elements, state) => {
+  if (!elements.posts) {
+    console.error('❌ Elemento posts no encontrado en el DOM');
+    return;
+  }
+
   elements.posts.innerHTML = '';
+
+  if (posts.length === 0) {
+    return;
+  }
 
   const postsContainer = document.createElement('div');
   postsContainer.classList.add('card', 'border-0');
@@ -76,6 +92,7 @@ const renderPosts = (posts, elements, state) => {
     link.dataset.id = post.id;
     link.textContent = post.title;
 
+    // Aplicar estilos según si ha sido visitado
     if (state.uiState?.visitedPosts?.has(post.id)) {
       link.classList.add('fw-normal', 'link-secondary');
     } else {
@@ -106,22 +123,56 @@ const renderForm = (form, elements) => {
     return;
   }
 
-  if (form.status === 'success') {
-    input.classList.remove('is-invalid');
-    feedback.classList.remove('text-danger');
-    feedback.classList.add('text-success');
-    feedback.textContent = 'RSS loaded successfully';
-  }
+  // Limpiar clases y contenido previo
+  input.classList.remove('is-invalid');
+  feedback.classList.remove('text-danger', 'text-success');
+  feedback.textContent = '';
 
-  if (form.status === 'failed') {
-    input.classList.add('is-invalid');
-    feedback.classList.remove('text-success');
-    feedback.classList.add('text-danger');
-    feedback.textContent = form.error || 'Something went wrong';
+  switch (form.status) {
+    case 'processing':
+      input.setAttribute('disabled', true);
+      feedback.classList.add('text-info');
+      feedback.textContent = 'Loading...';
+      break;
+
+    case 'success':
+      input.removeAttribute('disabled');
+      feedback.classList.add('text-success');
+      feedback.textContent = 'RSS loaded successfully';
+      input.focus();
+      break;
+
+    case 'failed':
+      input.removeAttribute('disabled');
+      input.classList.add('is-invalid');
+      feedback.classList.add('text-danger');
+      
+      // Mapear errores a mensajes
+      const errorMessages = {
+        required: 'This field is required',
+        notUrl: 'Must be a valid URL',
+        exists: 'RSS already exists',
+        noRss: 'Resource contains no valid RSS',
+        network: 'Network error',
+      };
+      
+      feedback.textContent = errorMessages[form.error] || 'Something went wrong';
+      input.focus();
+      break;
+
+    case 'filling':
+    default:
+      input.removeAttribute('disabled');
+      break;
   }
 };
 
 export default (path, value, state, elements) => {
+  if (!elements) {
+    console.error('❌ Elements object is undefined');
+    return;
+  }
+
   switch (path) {
     case 'feeds':
       renderFeeds(state.feeds, elements);
@@ -135,6 +186,11 @@ export default (path, value, state, elements) => {
     case 'form.status':
     case 'form.error':
       renderForm(state.form, elements);
+      break;
+
+    case 'uiState.visitedPosts':
+      // Re-renderizar posts para actualizar estilos
+      renderPosts(state.posts, elements, state);
       break;
 
     default:
