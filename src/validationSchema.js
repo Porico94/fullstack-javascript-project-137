@@ -2,11 +2,11 @@ import * as yup from 'yup';
 
 yup.setLocale({
     string: {
-        url: 'errors.invalidUrl',
+        url: () => ({ key: 'notUrl' }),
     },
     mixed: {
-        notOneOf: 'errors.notOneOf',
-        required: 'errors.required',
+        required: () => ({ key: 'required' }),
+        notOneOf: () => ({ key: 'exists' }),
     },
 });
 

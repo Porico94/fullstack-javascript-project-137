@@ -1,7 +1,7 @@
 import initWatcher from './watcher.js';
 import buildSchema from './validationSchema.js';
 import loadRss from './api.js';
-import parseRss from './parser.js';
+import parseRss from './rss.js';
 import { updateFeed } from './updateFeeds.js';
 import { renderForm, renderFeed, renderPosts } from './view.js';
 import showModal from './modal.js';

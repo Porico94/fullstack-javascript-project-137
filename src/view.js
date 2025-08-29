@@ -15,14 +15,14 @@ const renderForm = (elements, state) => {
         input.classList.add('border-success');
         feedback.classList.add('text-success');
         feedback.classList.remove('text-danger');
-        feedback.textContent = i18next.t('success');
+        feedback.textContent = i18next.t('loading.success');
         input.focus();
     } else {
         input.classList.remove('border-success');
         input.classList.add('border-danger');
         feedback.classList.add('text-danger');
         feedback.classList.remove('text-success');
-        feedback.textContent = i18next.t(state.form.errorMessage);
+        feedback.textContent = i18next.t(errors.errorMessage);
   }
 };
 
