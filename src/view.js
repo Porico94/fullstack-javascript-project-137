@@ -1,3 +1,4 @@
+// src/view.js
 import i18next from 'i18next';
 
 const renderFeeds = (feeds, elements) => {
@@ -131,34 +132,38 @@ const renderForm = (form, elements) => {
   feedback.textContent = '';
 
   switch (form.status) {
-    case 'processing':
+    case 'processing': {
       input.setAttribute('disabled', true);
       feedback.classList.add('text-info');
       feedback.textContent = 'Loading...';
       break;
+    }
 
-    case 'success':
+    case 'success': {
       input.removeAttribute('disabled');
       feedback.classList.add('text-success');
       feedback.textContent = i18next.t('loading.success');
       input.focus();
       break;
+    }
 
-    case 'failed':
+    case 'failed': {
       input.removeAttribute('disabled');
       input.classList.add('is-invalid');
       feedback.classList.add('text-danger');
-      
+
       // Usar i18next para los mensajes de error
       const errorKey = form.error || 'unknown';
       feedback.textContent = i18next.t(`errors.${errorKey}`);
       input.focus();
       break;
+    }
 
     case 'filling':
-    default:
+    default: {
       input.removeAttribute('disabled');
       break;
+    }
   }
 };
 
@@ -169,24 +174,28 @@ export default (path, value, state, elements) => {
   }
 
   switch (path) {
-    case 'feeds':
+    case 'feeds': {
       renderFeeds(state.feeds, elements);
       break;
+    }
 
-    case 'posts':
+    case 'posts': {
       renderPosts(state.posts, elements, state);
       break;
+    }
 
     case 'form':
     case 'form.status':
-    case 'form.error':
+    case 'form.error': {
       renderForm(state.form, elements);
       break;
+    }
 
-    case 'uiState.visitedPosts':
+    case 'uiState.visitedPosts': {
       // Re-renderizar posts para actualizar estilos
       renderPosts(state.posts, elements, state);
       break;
+    }
 
     default:
       break;

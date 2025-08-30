@@ -19,58 +19,56 @@ const MOCK_RSS = `<?xml version="1.0" encoding="UTF-8"?>
 </rss>`;
 
 test('Agregar feed y mostrar feedback y posts', async ({ page }) => {
-    
-    await page.route('**/allorigins.hexlet.app/get**', async (route) => {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({ contents: MOCK_RSS }),
-        });
+  await page.route('**/allorigins.hexlet.app/get**', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ contents: MOCK_RSS }),
     });
+  });
 
-    await page.goto('http://localhost:8080');
+  await page.goto('http://localhost:8080');
 
-    await page.locator('input[name="url"]').fill(
-        'https://lorem-rss.hexlet.app/feed?unit=second&interval=10&length=2'
-    ); 
+  await page.locator('input[name="url"]').fill(
+    'https://lorem-rss.hexlet.app/feed?unit=second&interval=10&length=2',
+  );
 
-    await page.getByTestId('add').click();
+  await page.getByTestId('add').click();
 
-    const feedback = page.getByTestId('feedback');
-    await expect(feedback).toHaveText('RSS cargado con éxito');
+  const feedback = page.getByTestId('feedback');
+  await expect(feedback).toHaveText('RSS cargado con éxito');
 
-    await expect(page.getByText('Post 1')).toBeVisible();
-    await expect(page.getByText('Post 2')).toBeVisible();
+  await expect(page.getByText('Post 1')).toBeVisible();
+  await expect(page.getByText('Post 2')).toBeVisible();
 });
 
-test('Mostrar modal y verificar titulo y descripcion', async ({page}) => {
-  
-  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({ contents: MOCK_RSS }),
-        });
+test('Mostrar modal y verificar titulo y descripcion', async ({ page }) => {
+  await page.route('**/allorigins.hexlet.app/get**', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ contents: MOCK_RSS }),
     });
+  });
 
-    await page.goto('http://localhost:8080');
+  await page.goto('http://localhost:8080');
 
-    await page.locator('input[name="url"]').fill(
-        'https://lorem-rss.hexlet.app/feed?unit=second&interval=10&length=2'
-    ); 
+  await page.locator('input[name="url"]').fill(
+    'https://lorem-rss.hexlet.app/feed?unit=second&interval=10&length=2',
+  );
 
-    await page.getByTestId('add').click();
+  await page.getByTestId('add').click();
 
-    await page.getByRole('button', { name: 'Vista previa' }).first().click();
+  await page.getByRole('button', { name: 'Vista previa' }).first().click();
 
-    const modalTitle = page.locator('.modal-title');
-    await expect(modalTitle).toBeVisible();
-    await expect(modalTitle).toHaveText('Post 1');
+  const modalTitle = page.locator('.modal-title');
+  await expect(modalTitle).toBeVisible();
+  await expect(modalTitle).toHaveText('Post 1');
 
-    const modalBody = page.locator('.modal-body');
-    await expect(modalBody).toBeVisible();
-    await expect(modalBody).toHaveText('Descripción 1');
-})
+  const modalBody = page.locator('.modal-body');
+  await expect(modalBody).toBeVisible();
+  await expect(modalBody).toHaveText('Descripción 1');
+});
 
 test('URL inválida muestra mensaje de error y NO hace fetch', async ({ page }) => {
   await page.route('**/allorigins.hexlet.app/get**', () => {
@@ -87,8 +85,7 @@ test('URL inválida muestra mensaje de error y NO hace fetch', async ({ page }) 
 });
 
 test('URL duplicada muestra mensaje "El RSS ya existe" (no hace segundo fetch)', async ({ page }) => {
-  
-  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
+  await page.route('**/allorigins.hexlet.app/get**', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -107,12 +104,11 @@ test('URL duplicada muestra mensaje "El RSS ya existe" (no hace segundo fetch)',
   // Intento de agregar de nuevo la misma URL
   await page.fill('input[name="url"]', feedUrl);
   await page.getByTestId('add').click();
-  await expect(page.getByTestId('feedback')).toHaveText('El RSS ya existe');  
+  await expect(page.getByTestId('feedback')).toHaveText('El RSS ya existe');
 });
 
 test('Muestra mensaje de error de red', async ({ page }) => {
-  
-  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
+  await page.route('**/allorigins.hexlet.app/get**', async route => {
     route.abort(); // Simula que la red falla
   });
 
@@ -128,10 +124,9 @@ test('Muestra mensaje de error de red', async ({ page }) => {
 });
 
 test('Muestra mensaje de error xml', async ({ page }) => {
-
   const invalidXml = '<rss><channel><title>Feed</title>';
-  
-  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
+
+  await page.route('**/allorigins.hexlet.app/get**', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -142,8 +137,8 @@ test('Muestra mensaje de error xml', async ({ page }) => {
   await page.goto('http://localhost:8080');
 
   const feedUrl = 'https://lorem-rss.hexlet.app/feed?unit=second&interval=10&length=2';
-  
+
   await page.fill('input[name="url"]', feedUrl);
   await page.getByTestId('add').click();
-  await expect(page.getByTestId('feedback')).toHaveText('invalidXml');  
+  await expect(page.getByTestId('feedback')).toHaveText('invalidXml');
 });

@@ -11,11 +11,9 @@ yup.setLocale({
   },
 });
 
-const buildSchema = (existingFeeds) => {
-  return yup.string()
-    .required()
-    .url()
-    .notOneOf(existingFeeds);
-};
+const buildSchema = existingFeeds => yup.string()
+  .required()
+  .url()
+  .notOneOf(existingFeeds);
 
 export default buildSchema;

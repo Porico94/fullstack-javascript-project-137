@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 
 export default (elements, initState, i18next) => {
-  const handleForm = (state) => {
+  const handleForm = state => {
     const {
       form: { valid, error },
     } = state;
@@ -15,7 +15,7 @@ export default (elements, initState, i18next) => {
     }
   };
 
-  const handleLoadingProcessStatus = (state) => {
+  const handleLoadingProcessStatus = state => {
     const { loadingProcess } = state;
     const { submit, input, feedback } = elements;
 
@@ -52,7 +52,7 @@ export default (elements, initState, i18next) => {
     }
   };
 
-  const handleFeeds = (state) => {
+  const handleFeeds = state => {
     // Everything is generated anew every time
     // The same is done in frameworks
     // Student can implement some optimizations
@@ -73,7 +73,7 @@ export default (elements, initState, i18next) => {
     const feedsList = document.createElement('ul');
     feedsList.classList.add('list-group', 'border-0', 'rounded-0');
 
-    const feedsListItems = feeds.map((feed) => {
+    const feedsListItems = feeds.map(feed => {
       const element = document.createElement('li');
       element.classList.add('list-group-item', 'border-0', 'border-end-0');
       const title = document.createElement('h3');
@@ -92,7 +92,7 @@ export default (elements, initState, i18next) => {
     feedsBox.appendChild(fragmentStructure);
   };
 
-  const handlePosts = (state) => {
+  const handlePosts = state => {
     const { posts, ui } = state;
     const { postsBox } = elements;
 
@@ -110,7 +110,7 @@ export default (elements, initState, i18next) => {
     const postsList = document.createElement('ul');
     postsList.classList.add('list-group', 'border-0', 'rounded-0');
 
-    const postsListItems = posts.map((post) => {
+    const postsListItems = posts.map(post => {
       const element = document.createElement('li');
       element.classList.add(
         'list-group-item',
@@ -148,7 +148,7 @@ export default (elements, initState, i18next) => {
     postsBox.appendChild(fragmentStructure);
   };
 
-  const handleModal = (state) => {
+  const handleModal = state => {
     const post = state.posts.find(({ id }) => id === state.modal.postId);
     const title = elements.modal.querySelector('.modal-title');
     const body = elements.modal.querySelector('.modal-body');
@@ -160,7 +160,7 @@ export default (elements, initState, i18next) => {
     fullArticleBtn.href = post.link;
   };
 
-  const watchedState = onChange(initState, (path) => {
+  const watchedState = onChange(initState, path => {
     console.log('here');
     switch (path) {
       case 'form':

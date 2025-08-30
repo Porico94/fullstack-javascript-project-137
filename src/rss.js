@@ -1,4 +1,4 @@
-export default (data) => {
+export default data => {
   const parser = new DOMParser();
   const dom = parser.parseFromString(data, 'text/xml');
 
@@ -19,7 +19,7 @@ export default (data) => {
   const channelDescription = channelDescriptionElement.textContent;
 
   const itemElements = dom.querySelectorAll('item');
-  const items = [...itemElements].map((el) => {
+  const items = [...itemElements].map(el => {
     const titleElement = el.querySelector('title');
     const title = titleElement.textContent;
     const linkElement = el.querySelector('link');
