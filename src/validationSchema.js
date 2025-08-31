@@ -11,7 +11,7 @@ yup.setLocale({
   },
 });
 
-const buildSchema = existingFeeds => yup.string()
+const buildSchema = (existingFeeds) => yup.string()
   .required()
   .url()
   .notOneOf(existingFeeds);

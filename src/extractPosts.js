@@ -11,7 +11,7 @@ const extractPosts = (contents, feed) => {
 
   const items = doc.querySelectorAll('channel > item');
 
-  const posts = Array.from(items).map(item => {
+  const posts = Array.from(items).map((item) => {
     const postTitle = item.querySelector('title')?.textContent;
     const postLink = item.querySelector('link')?.textContent;
     const postDescription = item.querySelector('description')?.textContent;

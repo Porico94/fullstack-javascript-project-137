@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 
 export default (elements, initState, i18next) => {
-  const handleForm = state => {
+  const handleForm = (state) => {
     const {
       form: { valid, error },
     } = state;
@@ -15,7 +15,7 @@ export default (elements, initState, i18next) => {
     }
   };
 
-  const handleLoadingProcessStatus = state => {
+  const handleLoadingProcessStatus = (state) => {
     const { loadingProcess } = state;
     const { submit, input, feedback } = elements;
 
@@ -92,7 +92,7 @@ export default (elements, initState, i18next) => {
     feedsBox.appendChild(fragmentStructure);
   };
 
-  const handlePosts = state => {
+  const handlePosts = (state) => {
     const { posts, ui } = state;
     const { postsBox } = elements;
 
@@ -148,7 +148,7 @@ export default (elements, initState, i18next) => {
     postsBox.appendChild(fragmentStructure);
   };
 
-  const handleModal = state => {
+  const handleModal = (state) => {
     const post = state.posts.find(({ id }) => id === state.modal.postId);
     const title = elements.modal.querySelector('.modal-title');
     const body = elements.modal.querySelector('.modal-body');

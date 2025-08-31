@@ -6,17 +6,17 @@ import buildSchema from './validationSchema.js';
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-const updateFeeds = watchedState => {
+const updateFeeds = (watchedState) => {
   if (watchedState.feeds.length === 0) {
     setTimeout(() => updateFeeds(watchedState), 5000);
     return;
   }
 
-  const requests = watchedState.feeds.map(feed => loadRss(feed.url)
+  const requests = watchedState.feeds.map((feed) => loadRss(feed.url)
     .then(contents => {
       const parsed = rssParser(contents);
 
-      const newPosts = parsed.items.map(item => ({
+      const newPosts = parsed.items.map((item) => ({
         id: generateId(),
         title: item.title,
         link: item.link,
@@ -26,8 +26,8 @@ const updateFeeds = watchedState => {
       }));
 
       // Agregar solo posts nuevos (comparando por link)
-      const existingLinks = watchedState.posts.map(p => p.link);
-      const freshPosts = newPosts.filter(post => !existingLinks.includes(post.link));
+      const existingLinks = watchedState.posts.map((p) => p.link);
+      const freshPosts = newPosts.filter((post) => !existingLinks.includes(post.link));
 
       if (freshPosts.length > 0) {
         watchedState.posts.unshift(...freshPosts);
@@ -68,8 +68,8 @@ export default () => {
     render(path, value, watchedState, elements);
   });
 
-  const validateUrl = url => {
-    const existingUrls = watchedState.feeds.map(feed => feed.url);
+  const validateUrl = (url) => {
+    const existingUrls = watchedState.feeds.map((feed) => feed.url);
     const schema = buildSchema(existingUrls);
 
     try {
@@ -91,12 +91,12 @@ export default () => {
     }
   };
 
-  const loadAndAddRss = url => {
+  const loadAndAddRss = (url) => {
     watchedState.form.status = 'processing';
     watchedState.form.error = null;
 
     loadRss(url)
-      .then(contents => {
+      .then((contents) => {
         const parsed = rssParser(contents);
 
         // Feed
@@ -108,7 +108,7 @@ export default () => {
         };
 
         // Posts
-        const posts = parsed.items.map(item => ({
+        const posts = parsed.items.map((item) => ({
           id: generateId(),
           title: item.title,
           link: item.link,
@@ -124,7 +124,7 @@ export default () => {
         watchedState.form.status = 'success';
         watchedState.form.error = null;
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Error loading RSS:', err);
         watchedState.form.status = 'failed';
 
@@ -139,7 +139,7 @@ export default () => {
   };
 
   // Evento de submit del formulario
-  elements.form.addEventListener('submit', e => {
+  elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     const url = elements.input.value.trim();
 
@@ -162,13 +162,13 @@ export default () => {
   });
 
   // Evento para vista previa y marcar como leído
-  elements.posts.addEventListener('click', e => {
+  elements.posts.addEventListener('click', (e) => {
     const previewBtn = e.target.closest('[data-bs-toggle="modal"]');
     const link = e.target.closest('a[data-id]');
 
     if (previewBtn) {
       const { id } = previewBtn.dataset;
-      const post = watchedState.posts.find(p => p.id === id);
+      const post = watchedState.posts.find((p) => p.id === id);
 
       if (post) {
         // Marcar como visitado

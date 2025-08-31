@@ -5,11 +5,11 @@ const updateFeed = (feed, watchedState) => {
   const { url } = feed;
 
   loadRss(url)
-    .then(contents => {
+    .then((contents) => {
       const newPosts = extractPosts(contents, feed);
 
-      const existingLinks = watchedState.posts.map(post => post.link);
-      const uniquePosts = newPosts.filter(post => !existingLinks.includes(post.link));
+      const existingLinks = watchedState.posts.map((post) => post.link);
+      const uniquePosts = newPosts.filter((post) => !existingLinks.includes(post.link));
 
       if (uniquePosts.length > 0) {
         watchedState.posts = [...watchedState.posts, ...uniquePosts];
@@ -23,8 +23,8 @@ const updateFeed = (feed, watchedState) => {
     });
 };
 
-const updateFeeds = watchedState => {
-  watchedState.feeds.forEach(feed => {
+const updateFeeds = (watchedState) => {
+  watchedState.feeds.forEach((feed) => {
     updateFeed(feed, watchedState);
   });
 };

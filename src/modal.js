@@ -1,7 +1,7 @@
 import { Modal } from 'bootstrap';
 
 const showModal = (postId, state, elements) => {
-  const post = state.posts.find(p => p.id === postId);
+  const post = state.posts.find((p) => p.id === postId);
   if (!post) return;
 
   const {
