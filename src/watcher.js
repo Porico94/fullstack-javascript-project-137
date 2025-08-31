@@ -52,7 +52,7 @@ export default (elements, initState, i18next) => {
     }
   };
 
-  const handleFeeds = state => {
+  const handleFeeds = (state) => {
     // Everything is generated anew every time
     // The same is done in frameworks
     // Student can implement some optimizations
@@ -73,7 +73,7 @@ export default (elements, initState, i18next) => {
     const feedsList = document.createElement('ul');
     feedsList.classList.add('list-group', 'border-0', 'rounded-0');
 
-    const feedsListItems = feeds.map(feed => {
+    const feedsListItems = feeds.map((feed) => {
       const element = document.createElement('li');
       element.classList.add('list-group-item', 'border-0', 'border-end-0');
       const title = document.createElement('h3');
@@ -110,7 +110,7 @@ export default (elements, initState, i18next) => {
     const postsList = document.createElement('ul');
     postsList.classList.add('list-group', 'border-0', 'rounded-0');
 
-    const postsListItems = posts.map(post => {
+    const postsListItems = posts.map((post) => {
       const element = document.createElement('li');
       element.classList.add(
         'list-group-item',
@@ -160,7 +160,7 @@ export default (elements, initState, i18next) => {
     fullArticleBtn.href = post.link;
   };
 
-  const watchedState = onChange(initState, path => {
+  const watchedState = onChange(initState, (path) => {
     console.log('here');
     switch (path) {
       case 'form':

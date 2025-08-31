@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       '#modal',
     ];
 
-    const missingElements = requiredElements.filter((selector) => !document.querySelector(selector));
+    const missingElements = requiredElements.filter(
+      (selector) => !document.querySelector(selector)
+    );
 
     if (missingElements.length > 0) {
       console.error('❌ Faltan elementos en el DOM:', missingElements);

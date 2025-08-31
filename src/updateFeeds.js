@@ -15,7 +15,7 @@ const updateFeed = (feed, watchedState) => {
         watchedState.posts = [...watchedState.posts, ...uniquePosts];
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('Error actualizando feed', err);
     })
     .finally(() => {

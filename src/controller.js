@@ -13,7 +13,7 @@ const updateFeeds = (watchedState) => {
   }
 
   const requests = watchedState.feeds.map((feed) => loadRss(feed.url)
-    .then(contents => {
+    .then((contents) => {
       const parsed = rssParser(contents);
 
       const newPosts = parsed.items.map((item) => ({
@@ -33,7 +33,7 @@ const updateFeeds = (watchedState) => {
         watchedState.posts.unshift(...freshPosts);
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('Error al actualizar feed:', err);
     }));
 
