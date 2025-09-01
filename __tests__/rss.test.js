@@ -19,7 +19,7 @@ const MOCK_RSS = `<?xml version="1.0" encoding="UTF-8"?>
 </rss>`;
 
 test('Agregar feed y mostrar feedback y posts', async ({ page }) => {
-  await page.route('**/allorigins.hexlet.app/get**', async route => {
+  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -43,7 +43,7 @@ test('Agregar feed y mostrar feedback y posts', async ({ page }) => {
 });
 
 test('Mostrar modal y verificar titulo y descripcion', async ({ page }) => {
-  await page.route('**/allorigins.hexlet.app/get**', async route => {
+  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -85,7 +85,7 @@ test('URL inválida muestra mensaje de error y NO hace fetch', async ({ page }) 
 });
 
 test('URL duplicada muestra mensaje "El RSS ya existe" (no hace segundo fetch)', async ({ page }) => {
-  await page.route('**/allorigins.hexlet.app/get**', async route => {
+  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -108,7 +108,7 @@ test('URL duplicada muestra mensaje "El RSS ya existe" (no hace segundo fetch)',
 });
 
 test('Muestra mensaje de error de red', async ({ page }) => {
-  await page.route('**/allorigins.hexlet.app/get**', async route => {
+  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
     route.abort(); // Simula que la red falla
   });
 
@@ -126,7 +126,7 @@ test('Muestra mensaje de error de red', async ({ page }) => {
 test('Muestra mensaje de error xml', async ({ page }) => {
   const invalidXml = '<rss><channel><title>Feed</title>';
 
-  await page.route('**/allorigins.hexlet.app/get**', async route => {
+  await page.route('**/allorigins.hexlet.app/get**', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
