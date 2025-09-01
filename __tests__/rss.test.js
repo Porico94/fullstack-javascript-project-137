@@ -1,5 +1,4 @@
-/* eslint-disable testing-library/prefer-screen-queries */
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable */
 import { test, expect } from '@playwright/test';
 
 const MOCK_RSS = `<?xml version="1.0" encoding="UTF-8"?>
